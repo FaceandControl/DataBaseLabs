@@ -14,12 +14,7 @@ namespace DataBaseLab2
         public void ControllerLoop() {
             while (true)
             {
-                Console.WriteLine("Insert: 1");
-                Console.WriteLine("Update: 2");
-                Console.WriteLine("Delete: 3");
-                Console.WriteLine("Read: 4");
-                Console.WriteLine("Select: 5");
-                Console.WriteLine("RandomInsert: 6");
+                View.MainMenu();
                 int command_int = 0;
                 string command = Console.ReadLine();
                 try
@@ -27,33 +22,31 @@ namespace DataBaseLab2
                     command_int = Convert.ToInt32(command);
                 }
                 catch (Exception ex) {
-                    View.Report("Error: " + ex.Message);
+                    View.ReportError(ex.Message);
                 }
                 switch (command_int) {
                     case 1:
-                        Console.WriteLine("TableName Parameters:");
+                        View.InsertInfo();
                         Insert(Console.ReadLine());
                         break;
                     case 2:
-                        Console.WriteLine("TableName New_parameters:");
+                        View.UpdateInfo();
                         Update(Console.ReadLine());
                         break;
                     case 3:
-                        Console.WriteLine("TableName ID OR TableName:");
+                        View.DeleteInfo();
                         Delete(Console.ReadLine());
                         break;
                     case 4:
-                        Console.WriteLine("TableName:");
+                        View.ReadInfo();
                         Read(Console.ReadLine());
                         break;
                     case 5:
-                        Console.WriteLine("Select t_name, trainer, s_name WHERE first char in t_name and s_name what you LIKE: 1");
-                        Console.WriteLine("Select MatchID WHERE goals >= count up to minute: 2");
-                        Console.WriteLine("Select TeamID WHERE max goals in match: 3");
+                        View.SelectInfo();
                         Select(Console.ReadLine());
                         break;
                     case 6:
-                        Console.WriteLine("TableName Counter:");
+                        View.RandomSelectInfo();
                         RandomInsert(Console.ReadLine());
                         break;
                 }
@@ -75,7 +68,7 @@ namespace DataBaseLab2
                         string address = parameters[3];
                         View.ShowRead(model.InsertStadium(s_name, capacity, address));
                     }
-                    catch (Exception ex) { View.Report("Error: " + ex.Message); }
+                    catch (Exception ex) { View.ReportError(ex.Message); }
                     break;
                 case "Teams":
                     try
@@ -84,7 +77,7 @@ namespace DataBaseLab2
                         string trainer = parameters[2];
                         View.ShowRead(model.InsertTeam(t_name, trainer));
                     }
-                    catch (Exception ex) { View.Report("Error: " + ex.Message); }
+                    catch (Exception ex) { View.ReportError(ex.Message); }
                     break;
                 case "Matches":
                     try
@@ -101,7 +94,7 @@ namespace DataBaseLab2
                             int StadiumID = Convert.ToInt32(parameters[2]);
                             View.ShowRead(model.InsertMatch(start_time, StadiumID));
                         }
-                        catch (Exception ex1) { View.Report("Error: " + ex.Message + " or " + ex1.Message); }
+                        catch (Exception ex1) { View.ReportErrors(ex.Message, ex1.Message); }
                     }
                     break;
                 case "Games":
@@ -119,7 +112,7 @@ namespace DataBaseLab2
                             int MatchID = Convert.ToInt32(parameters[2]);
                             View.ShowRead(model.InsertGame(TeamID, MatchID));
                         }
-                        catch (Exception ex1) { View.Report("Error: " + ex.Message + " or " + ex1.Message); }
+                        catch (Exception ex1) { View.ReportErrors(ex.Message, ex1.Message); }
                     }
                     break;
                 case "Goals":
@@ -139,7 +132,7 @@ namespace DataBaseLab2
                             int MatchID = Convert.ToInt32(parameters[3]);
                             View.ShowRead(model.InsertGoal(minute, TeamID, MatchID));
                         }
-                        catch (Exception ex1) { View.Report("Error: " + ex.Message + " or " + ex1.Message); }
+                        catch (Exception ex1) { View.ReportErrors(ex.Message, ex1.Message); }
                     }
                     break;
             }
@@ -160,7 +153,7 @@ namespace DataBaseLab2
                         int StadiumID = Convert.ToInt32(parameters[4]);
                         View.ShowRead(model.UpdateStadium(s_name, capacity, address, StadiumID));
                     }
-                    catch (Exception ex) { View.Report("Error: " + ex.Message); }
+                    catch (Exception ex) { View.ReportError(ex.Message); }
                     break;
                 case "Teams":
                     try
@@ -170,7 +163,7 @@ namespace DataBaseLab2
                         int TeamID = Convert.ToInt32(parameters[3]);
                         View.ShowRead(model.UpdateTeam(t_name, trainer, TeamID));
                     }
-                    catch (Exception ex) { View.Report("Error: " + ex.Message); }
+                    catch (Exception ex) { View.ReportError(ex.Message); }
                     break;
                 case "Matches":
                     try
@@ -180,7 +173,7 @@ namespace DataBaseLab2
                         int MatchID = Convert.ToInt32(parameters[3]);
                         View.ShowRead(model.UpdateMatch(start_time, StadiumID, MatchID));
                     }
-                    catch (Exception ex) { View.Report("Error: " + ex.Message); }
+                    catch (Exception ex) { View.ReportError(ex.Message); }
                     break;
                 case "Games":
                     try
@@ -190,7 +183,7 @@ namespace DataBaseLab2
                         int GameID = Convert.ToInt32(parameters[3]);
                         View.ShowRead(model.UpdateGame(TeamID, MatchID, GameID));
                     }
-                    catch (Exception ex) { View.Report("Error: " + ex.Message); }
+                    catch (Exception ex) { View.ReportError(ex.Message); }
                     break;
                 case "Goals":
                     try
@@ -201,7 +194,7 @@ namespace DataBaseLab2
                         int GoalID = Convert.ToInt32(parameters[4]);
                         View.ShowRead(model.UpdateGoal(minute, TeamID, MatchID, GoalID));
                     }
-                    catch (Exception ex) { View.Report("Error: " + ex.Message); }
+                    catch (Exception ex) { View.ReportError(ex.Message); }
                     break;
             }
         }
@@ -217,55 +210,55 @@ namespace DataBaseLab2
                     try
                     {
                         int StadiumID = Convert.ToInt32(parameters[1]);
-                        View.Report("Deleted " + model.DeleteStadium(StadiumID) + " rows");
+                        View.DeleteReport(model.DeleteStadium(StadiumID));
                     }
                     catch (Exception ex)
                     {
-                        View.Report("Deleted " + model.DeleteStadiums() + " rows");
+                        View.DeleteReport(model.DeleteStadiums());
                     }
                     break;
                 case "Teams":
                     try
                     {
                         int TeamID = Convert.ToInt32(parameters[1]);
-                        View.Report("Deleted " + model.DeleteTeam(TeamID) + " rows");
+                        View.DeleteReport(model.DeleteTeam(TeamID));
                     }
                     catch (Exception ex)
                     {
-                        View.Report("Deleted " + model.DeleteTeams() + " rows");
+                        View.DeleteReport(model.DeleteTeams());
                     }
                     break;
                 case "Matches":
                     try
                     {
                         int MatchID = Convert.ToInt32(parameters[1]);
-                        View.Report("Deleted " + model.DeleteMatch(MatchID) + " rows");
+                        View.DeleteReport(model.DeleteMatch(MatchID));
                     }
                     catch (Exception ex)
                     {
-                        View.Report("Deleted " + model.DeleteMatches() + " rows");
+                        View.DeleteReport(model.DeleteMatches());
                     }
                     break;
                 case "Games":
                     try
                     {
                         int GameID = Convert.ToInt32(parameters[1]);
-                        View.Report("Deleted " + model.DeleteGame(GameID) + " rows");
+                        View.DeleteReport(model.DeleteGame(GameID));
                     }
                     catch (Exception ex)
                     {
-                        View.Report("Deleted " + model.DeleteGames() + " rows");
+                        View.DeleteReport(model.DeleteGames());
                     }
                     break;
                 case "Goals":
                     try
                     {
                         int GoalID = Convert.ToInt32(parameters[1]);
-                        View.Report("Deleted " + model.DeleteGoal(GoalID) + " rows");
+                        View.DeleteReport(model.DeleteGoal(GoalID));
                     }
                     catch (Exception ex)
                     {
-                        View.Report("Deleted " + model.DeleteGoals() + " rows");
+                        View.DeleteReport(model.DeleteGoals());
                     }
                     break;
             }
@@ -322,12 +315,11 @@ namespace DataBaseLab2
                         break;
                 }
                 stopWatch.Stop();
-                var elapsed = stopWatch.Elapsed;
-                View.Report("Time taken: (" + elapsed.ToString("ss'.'fff") + ") s.");
+                View.TimerReport(stopWatch.Elapsed);
             }
             catch (Exception ex)
             {
-                View.Report("Error: " + ex.Message);
+                View.ReportError(ex.Message);
             }
         }
         public void RandomInsert(string task)
@@ -341,25 +333,25 @@ namespace DataBaseLab2
                 switch (parameters[0])
                 {
                     case "Stadiums":
-                        View.Report("Inserted " + model.RandomInsertStadiums(counter) + " rows");
+                        View.InsertReport(model.RandomInsertStadiums(counter));
                         break;
                     case "Teams":
-                        View.Report("Inserted " + model.RandomInsertTeams(counter) + " rows");
+                        View.InsertReport(model.RandomInsertTeams(counter));
                         break;
                     case "Matches":
-                        View.Report("Inserted " + model.RandomInsertMatches(counter) + " rows");
+                        View.InsertReport(model.RandomInsertMatches(counter));
                         break;
                     case "Games":
-                        View.Report("Inserted " + model.RandomInsertGames(counter) + " rows");
+                        View.InsertReport(model.RandomInsertGames(counter));
                         break;
                     case "Goals":
-                        View.Report("Inserted " + model.RandomInsertGoals(counter) + " rows");
+                        View.InsertReport(model.RandomInsertGoals(counter));
                         break;
                 }
             }
             catch (Exception ex)
             {
-                View.Report("Error: " + ex.Message);
+                View.ReportError(ex.Message);
             }
         }
     }
