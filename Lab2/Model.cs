@@ -333,18 +333,18 @@ namespace DataBaseLab2
 }
 
 /*
- SELECT DISTINCT public."Stadiums"."s_name", public."Teams"."t_name", public."Teams"."trainer" 
+SELECT DISTINCT public."Stadiums"."s_name", public."Teams"."t_name", public."Teams"."trainer" 
 FROM public."Teams" INNER JOIN
 public."Games" ON public."Teams"."TeamID" = public."Games"."TeamID"
 INNER JOIN public."Matches" ON public."Matches"."MatchID" = public."Games"."MatchID"
 INNER JOIN public."Stadiums" ON public."Stadiums"."StadiumID"=public."Matches"."StadiumID" 
 WHERE "s_name" LIKE 'M%' AND "t_name" LIKE 'S%'
 
- -- SELECT Count(*) FROM public."Goals" where minute < 30 group by "MatchID"; --
+-- SELECT Count(*) FROM public."Goals" where minute < 30 group by "MatchID"; --
 select distinct "MatchID" from public."Goals" as "g" where (SELECT Count(*) FROM public."Goals" where minute < 30 and "MatchID" = "g"."MatchID") > 2
 
- select distinct "TeamID" from public."Goals" as "m" where (select Count(*) from public."Goals" where public."Goals"."MatchID" = "m"."MatchID" 
- and public."Goals"."TeamID" = "m"."TeamID") = (select max(y.m) from (select count(*) as m from public."Goals" group by public."Goals"."MatchID",
- public."Goals"."TeamID") as y)
+select distinct "TeamID" from public."Goals" as "m" where (select Count(*) from public."Goals" where public."Goals"."MatchID" = "m"."MatchID" 
+and public."Goals"."TeamID" = "m"."TeamID") = (select max(y.m) from (select count(*) as m from public."Goals" group by public."Goals"."MatchID",
+public."Goals"."TeamID") as y)
 */
 
